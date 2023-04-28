@@ -1,0 +1,43 @@
+---
+import type { TranslationDict } from "../i18n/utils";
+import "../styles/globals.css";
+import FooterLicense from "./FooterComponents/FooterLicense.astro";
+import FooterLangSelect from "./FooterLangSelect.astro";
+---
+
+<footer>
+  <div id="FooterMain">
+    <div>
+      <h2>Topic</h2>
+    </div>
+    <div>
+      <h2>News</h2>
+    </div>
+  </div>
+  <FooterLangSelect />
+  <FooterLicense />
+</footer>
+
+<style>
+  footer {
+    background-color: var(--primary-color);
+    color: var(--text-color-bright);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    text-align: center;
+    gap: 5px;
+    display: flex;
+    flex-direction: column;
+  }
+  h2 {
+    text-decoration: underline;
+  }
+  div#FooterMain {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  p#License {
+    font-size: 0.9rem;
+  }
+</style>

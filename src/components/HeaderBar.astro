@@ -1,0 +1,186 @@
+---
+import iconPng from "../img/seal.png";
+import { Image, Picture } from "@astrojs/image/components";
+import "../styles/globals.css";
+import {
+  useTranslationDict,
+  type TranslationDict,
+  getLangFromUrl,
+  changeLangRedirect,
+} from "../i18n/utils";
+
+const translationDict: TranslationDict = {
+  en: {
+    menu: "Menu",
+    topics: "Topics",
+    news: "News",
+    ministries: "Ministries",
+    documents: "Documents",
+    services: "Services",
+  },
+  ja: {
+    menu: "メニュー",
+    topics: "話題",
+    news: "ニュース",
+    ministries: "省庁",
+    documents: "書類",
+    services: "サービス",
+  },
+  zh: {
+    menu: "菜单",
+    topics: "主题",
+    news: "新闻",
+    ministries: "部委",
+    documents: "文件",
+    services: "服务",
+  },
+  id: {
+    menu: "Menu",
+    topics: "Topik",
+    news: "Berita",
+    ministries: "Kementerian",
+    documents: "Dokumen",
+    services: "Layanan",
+  },
+  it: {
+    menu: "Menu",
+    topics: "Temi",
+    news: "Notizie",
+    ministries: "Ministeri",
+    documents: "Documenti",
+    services: "Servizi",
+  },
+};
+
+const lang = getLangFromUrl(Astro.url);
+
+const useT = useTranslationDict(translationDict, getLangFromUrl(Astro.url));
+---
+
+<nav>
+  <div id="HeaderDiv">
+    <a href={`/${lang}`}>
+      <Picture
+        src={iconPng}
+        alt="Seal"
+        widths={[32, 64, 128, 512]}
+        sizes="(max-width: 600px) 70px, (max-width: 1920px) 40px, 50px"
+      />
+    </a>
+    <a href="javascript:;" class:list={["no_js"]} id="HeaderExpand"
+      >{useT("menu")}</a
+    >
+    <a href="#" class:list={["no_js"]} id="HeaderLink">{useT("topics")}</a>
+    <a href="#" class:list={["no_js"]} id="HeaderLink">{useT("news")}</a>
+    <a href="#" class:list={["no_js"]} id="HeaderLink">{useT("ministries")}</a>
+    <a href="#" class:list={["no_js"]} id="HeaderLink">{useT("documents")}</a>
+    <a href="#" class:list={["no_js"]} id="HeaderLink">{useT("services")}</a>
+  </div>
+</nav>
+
+<style>
+  nav,
+  div {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  div {
+    background-color: var(--primary-color);
+    position: relative;
+    padding: 5px;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: flex;
+    jusitfy-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 1vw;
+    /* border-bottom-left-radius: 8px; */
+    /* border-bottom-right-radius: 8px; */
+    transition: flex-direction 1s;
+  }
+  a {
+    color: var(--text-color-bright);
+    text-decoration: none;
+    border: 1px solid var(--primary-color-brighter);
+    border-radius: 10px;
+    padding: 5px;
+    transition: background-color 0.2s ease-in-out;
+  }
+  a:hover {
+    background-color: var(--primary-color-brighter);
+  }
+  a:visited {
+    text-decoration: none;
+  }
+
+  #HeaderExpand {
+    display: none;
+  }
+  #HeaderExpand.no_js {
+    display: none;
+  }
+
+  #HeaderLink {
+    display: initial;
+  }
+
+  @media only screen and (max-width: 600px) {
+    div {
+      justify-content: space-between;
+      flex-direction: column;
+      gap: 2vh;
+    }
+    a {
+      padding: 5px;
+      border: 1px solid var(--primary-color-brighter);
+      border-radius: 10px;
+    }
+    #HeaderExpand {
+      display: initial;
+    }
+    #HeaderLink {
+      display: none;
+    }
+    #HeaderLink.no_js {
+      display: initial;
+    }
+    #HeaderLink.enabled {
+      display: initial;
+    }
+  }
+</style>
+
+<script>
+  let allJsElements = document.querySelectorAll(".no_js");
+  allJsElements.forEach((e) => {
+    e.classList.remove("no_js");
+  });
+</script>
+
+<script>
+  let expandButton = document.querySelector("#HeaderExpand");
+  const classToggle = (element: Element, className: string) => {
+    if (element.classList.contains(className)) {
+      element.classList.remove(className);
+    } else {
+      element.classList.add(className);
+    }
+  };
+  expandButton?.addEventListener("click", () => {
+    console.debug("hello");
+    document.querySelectorAll("#HeaderLink").forEach((el) => {
+      //if (el.classList.contains("enabled")) {
+      //  el.classList.remove("enabled");
+      //} else {
+      //  el.classList.add("enabled");
+      //}
+      classToggle(el, "enabled");
+    });
+    let headerDiv = document.getElementById("HeaderDiv");
+    if (headerDiv != null) {
+      classToggle(headerDiv, "expanded");
+    }
+  });
+</script>

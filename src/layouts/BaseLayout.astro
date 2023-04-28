@@ -1,0 +1,60 @@
+---
+import "../styles/globals.css";
+import iconPng from "../img/seal.png";
+import HeaderBar from "../components/HeaderBar.astro";
+import NoJSBar from "../components/NoJSBar.astro";
+import FooterBar from "../components/FooterBar.astro";
+import {
+  TranslationDict,
+  getLangFromUrl,
+  useTranslationDict,
+} from "../i18n/utils";
+
+const { title, description } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const translationDict: TranslationDict = {
+  en: {
+    title_suffix: "Nation of Derrenomo Official Site",
+  },
+  id: {
+    title_suffix: "Situs Resmi Negara Derrenomo"
+  },
+  ja: {
+    title_suffix: "デレノモ国政府の公式サイト",
+  },
+  zh: {
+    title_suffix: "德雷诺莫国官方网站",
+  },
+  it: {
+    title_suffix: "Sito Ufficiale Della Nazione di Derrenomo"
+  }
+};
+const useT = useTranslationDict(translationDict, lang);
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href={iconPng.src} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    {description && <meta name="description" content={description} />}
+    <title>{`${title} | ${useT("title_suffix")}`}</title>
+  </head>
+  <body>
+    <HeaderBar />
+    <div id="BodyContainer">
+      <slot />
+    </div>
+    <NoJSBar />
+    <FooterBar />
+  </body>
+</html>
+
+<style>
+  div#BodyContainer {
+    position: relative;
+    min-height: 100vh;
+    width: 100vw;
+  }
+</style>

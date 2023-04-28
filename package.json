@@ -1,0 +1,17 @@
+{
+  "name": "derrenomo_site_astro",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/image": "^0.16.6",
+    "astro": "^2.3.0",
+    "sharp": "^0.31.3"
+  }
+}

@@ -1,0 +1,56 @@
+---
+import {
+  getLangFromUrl,
+  useTranslationDict,
+  type TranslationDict,
+} from "../../i18n/utils";
+import "../../styles/globals.css";
+import { Image } from "@astrojs/image/components";
+import licenseSeal from "../../img/cc-zero.svg";
+
+const license = {
+  name: "CC0 1.0",
+  link: "https://creativecommons.org/publicdomain/zero/1.0/legalcode",
+};
+const translationDict: TranslationDict = {
+  en: {
+    text: "Derrenomo.gov, created by Troy Dwijanto",
+  },
+  id: {
+    text: "Derrenomo.gov, dibikin oleh Troy Dwijanto",
+  },
+  ja: {
+    text: "Derrenomo.govはTroy Dwijantoによって作成されました",
+  },
+  zh: {
+    text: "Derrenomo.gov 由 Troy Dwijanto 创建",
+  },
+  it: {
+    text: "Derrenomo.gov, è stato creato da Troy Dwijanto",
+  },
+};
+const lang = getLangFromUrl(Astro.url);
+const useT = useTranslationDict(translationDict, lang);
+---
+
+<p>
+  {useT("text")}
+  <a href={license.link}>{license.name}</a> -
+  <a href={license.link}
+    ><Image src={licenseSeal} alt="CC Seal" height={24} /></a
+  >
+  <!-- @{new Date().getFullYear()}, -->
+</p>
+
+<style>
+  p {
+    font-size: 0.85rem;
+  }
+  img {
+    vertical-align: bottom;
+  }
+  a,
+  a:visited {
+    color: var(--text-color-bright);
+  }
+</style>

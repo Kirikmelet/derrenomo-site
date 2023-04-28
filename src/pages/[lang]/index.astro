@@ -1,0 +1,137 @@
+---
+import { supportedLanguages } from "../../i18n/translations";
+import {
+  useTranslationDict,
+  type TranslationDict,
+  getLangFromUrl,
+} from "../../i18n/utils";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import "../../styles/globals.css";
+
+const translationDict: TranslationDict = {
+  en: {
+    title: "Index",
+    welcome_text: "Welcome to ",
+    officiality_text: "Official Site of the Government of Derrenomo",
+    featured_header: "Featured",
+    latest_news: "Latest News",
+    services: "Services",
+    history: "History",
+    assets_and_files: "Assets and Files",
+  },
+  ja: {
+    title: "索引",
+    welcome_text: "ようこそへ",
+    officiality_text: "デレノモ国政府の公式サイト",
+    featured_header: "特徴",
+    latest_news: "最新ニュース",
+    services: "サービス",
+    history: "歴史",
+    assets_and_files: "アセットとファイル",
+  },
+  zh: {
+    title: "索引",
+    welcome_text: "欢迎您",
+    officiality_text: "德雷诺莫国政府官方网站",
+    featured_header: "特色",
+    latest_news: "最新消息",
+    services: "服务",
+    history: "历史",
+    assets_and_files: "资产和文件",
+  },
+  id: {
+    title: "Indeks",
+    welcome_text: "Selamat Datang di ",
+    officiality_text: "Situs Resmi Pemerintah Negara Derrenomo",
+    featured_header: "Fitur",
+    latest_news: "Berita Terbaru",
+    services: "Layanan",
+    history: "Sejarah",
+    assets_and_files: "Aset dan Berkas",
+  },
+  it: {
+    title: "Indice",
+    welcome_text: "Benvenuti a ",
+    officiality_text: "Sito ufficiale del governo di Derrenomo",
+    featured_header: "In primo piano",
+    latest_news: "Ultime notizie",
+    services: "Servizi",
+    history: "Storia",
+    assets_and_files: "Risorse e file",
+  },
+} as const;
+
+const { lang } = Astro.params;
+
+const useT = useTranslationDict(translationDict, lang!);
+
+export function getStaticPaths() {
+  let params = [];
+  for (const i in supportedLanguages) {
+    params.push({ params: { lang: i } });
+  }
+  return params;
+}
+---
+
+<BaseLayout title={useT("title")}>
+  <main>
+    <header>
+      <h1>{useT("welcome_text")}<span>Derrenomo.Gov</span></h1>
+      <auto>{useT("officiality_text")}</auto>
+    </header>
+    <div><h2>{useT("featured_header")}</h2></div>
+    <article>
+      <div id="NewsDiv">
+        <h2>{useT("latest_news")}</h2>
+      </div>
+      <div id="ServciesDiv">
+        <h2>{useT("services")}</h2>
+      </div>
+      <div id="HistoryDiv">
+        <h2>{useT("history")}</h2>
+      </div>
+      <div id="AssetsDiv">
+        <h2>{useT("assets_and_files")}</h2>
+      </div>
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  main {
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    padding: 15px;
+  }
+  main > div {
+    padding: 15px;
+    text-align: center;
+  }
+  header {
+    background-color: var(--secondary-color);
+    padding: 15px;
+    color: var(--text-color-dark);
+    text-align: center;
+    border-radius: 10px;
+  }
+  article {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    text-align: center;
+  }
+  div {
+    background-color: var(--teritiary-color);
+    color: var(--text-color-dark);
+    border-radius: 10px;
+  }
+  @media only screen and (max-width: 600px) {
+    article {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

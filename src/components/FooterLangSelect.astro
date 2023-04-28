@@ -1,0 +1,59 @@
+---
+import "../styles/globals.css";
+import { supportedLanguages } from "../i18n/translations";
+import { TranslationDict, changeLangRedirect } from "../i18n/utils";
+
+const translationDict: TranslationDict = {
+  en: { copyright_text: "Except where otherwise noted, content on this site" },
+};
+---
+
+<ul>
+  {
+    Object.keys(supportedLanguages).map((key) => (
+      <li>
+        <a href={changeLangRedirect(Astro.url, key).href}>
+          {supportedLanguages[key]}
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  ul {
+    display: inline-flex;
+    list-style-type: none;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    padding: 0;
+    margin: auto;
+  }
+  li {
+    border: 1px solid var(--primary-color-brighter);
+    border-radius: 10px;
+    transition: background-color 0.1s ease-in-out;
+  }
+  li:hover {
+    background-color: var(--primary-color-brighter);
+  }
+  a,
+  a:visited {
+    text-decoration: none;
+    color: var(--text-color-bright);
+    padding: 5px;
+  }
+  @media only screen and (max-width: 600px) {
+    ul {
+      gap: 5px;
+      flex-direction: column;
+      width: fit-content;
+      justify-content: center;
+      align-items: center;
+    }
+    a,
+    ul {
+    }
+  }
+</style>
