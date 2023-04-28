@@ -1,0 +1,27 @@
+---
+interface genericInterface {
+  default: Record<string, any>;
+}
+import BaseLayout from "../../layouts/BaseLayout.astro";
+const pdfs = await import.meta.glob("/public/pdfs/*.pdf", { as: "url" });
+const pdfs2 = (await Astro.glob<genericInterface>(
+  "/public/pdfs/*.pdf"
+)) as Array<genericInterface>;
+function replacePathname(url: URL, newPathname: string): URL {
+  return new URL(newPathname, url);
+}
+---
+
+<BaseLayout>
+  <main>
+    <div>
+      {
+        pdfs2.map((f) => (
+          <a href={replacePathname(Astro.url, String(f.default))}>
+            <p>{f.default}</p>
+          </a>
+        ))
+      }
+    </div>
+  </main>
+</BaseLayout>

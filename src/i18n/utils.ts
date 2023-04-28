@@ -13,9 +13,10 @@ export function getLangFromUrl(url: URL): string {
 }
 
 export function changeLangRedirect(url: URL, lang: string): URL {
-  let newUrl: URL = new URL(url);
-  newUrl.pathname = url.pathname.replace(`/${getLangFromUrl(url)}`, `/${lang}`);
-  return newUrl;
+  return new URL(
+    url.pathname.replace(`/${getLangFromUrl(url)}`, `/${lang}`),
+    url
+  );
 }
 
 export function useTranslationDict(

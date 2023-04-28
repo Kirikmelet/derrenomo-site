@@ -8,6 +8,7 @@ import {
   getLangFromUrl,
   changeLangRedirect,
 } from "../i18n/utils";
+import { baseUrl } from "../utils/base";
 
 const translationDict: TranslationDict = {
   en: {
@@ -59,7 +60,7 @@ const useT = useTranslationDict(translationDict, getLangFromUrl(Astro.url));
 
 <nav>
   <div id="HeaderDiv">
-    <a href={`/${lang}`}>
+    <a href={`/${baseUrl}${lang}`}>
       <Picture
         src={iconPng}
         alt="Seal"
@@ -70,11 +71,43 @@ const useT = useTranslationDict(translationDict, getLangFromUrl(Astro.url));
     <a href="javascript:;" class:list={["no_js"]} id="HeaderExpand"
       >{useT("menu")}</a
     >
-    <a href="#" class:list={["no_js"]} id="HeaderLink">{useT("topics")}</a>
-    <a href="#" class:list={["no_js"]} id="HeaderLink">{useT("news")}</a>
-    <a href="#" class:list={["no_js"]} id="HeaderLink">{useT("ministries")}</a>
-    <a href="#" class:list={["no_js"]} id="HeaderLink">{useT("documents")}</a>
-    <a href="#" class:list={["no_js"]} id="HeaderLink">{useT("services")}</a>
+    <a
+      href={changeLangRedirect(
+        new URL(`/${baseUrl}en/topics`, Astro.url),
+        lang
+      )}
+      class:list={["no_js"]}
+      id="HeaderLink">{useT("topics")}</a
+    >
+    <a
+      href={changeLangRedirect(new URL(`/${baseUrl}en/news`, Astro.url), lang)}
+      class:list={["no_js"]}
+      id="HeaderLink">{useT("news")}</a
+    >
+    <a
+      href={changeLangRedirect(
+        new URL(`/${baseUrl}en/ministries`, Astro.url),
+        lang
+      )}
+      class:list={["no_js"]}
+      id="HeaderLink">{useT("ministries")}</a
+    >
+    <a
+      href={changeLangRedirect(
+        new URL(`/${baseUrl}en/documents`, Astro.url),
+        lang
+      )}
+      class:list={["no_js"]}
+      id="HeaderLink">{useT("documents")}</a
+    >
+    <a
+      href={changeLangRedirect(
+        new URL(`/${baseUrl}en/services`, Astro.url),
+        lang
+      )}
+      class:list={["no_js"]}
+      id="HeaderLink">{useT("services")}</a
+    >
   </div>
 </nav>
 

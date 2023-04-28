@@ -15,19 +15,24 @@ const lang = getLangFromUrl(Astro.url);
 const translationDict: TranslationDict = {
   en: {
     title_suffix: "Nation of Derrenomo Official Site",
+    fallback: "This page is missing content!",
   },
   id: {
-    title_suffix: "Situs Resmi Negara Derrenomo"
+    title_suffix: "Situs Resmi Negara Derrenomo",
+    fallback: "Halaman ini tidak memiliki konten!",
   },
   ja: {
     title_suffix: "デレノモ国政府の公式サイト",
+    fallback: "このページにはコンテンツがありません!",
   },
   zh: {
     title_suffix: "德雷诺莫国官方网站",
+    fallback: "此页面缺少内容！",
   },
   it: {
-    title_suffix: "Sito Ufficiale Della Nazione di Derrenomo"
-  }
+    title_suffix: "Sito Ufficiale Della Nazione di Derrenomo",
+    fallback: "In questa pagina mancano i contenuti!",
+  },
 };
 const useT = useTranslationDict(translationDict, lang);
 ---
@@ -44,7 +49,9 @@ const useT = useTranslationDict(translationDict, lang);
   <body>
     <HeaderBar />
     <div id="BodyContainer">
-      <slot />
+      <slot>
+        <p>This page is missing content!</p>
+      </slot>
     </div>
     <NoJSBar />
     <FooterBar />
