@@ -1,7 +1,9 @@
 ---
 import TableOfContents from "../../components/TableOfContents.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-const govPdfs = await Astro.glob<Record<string, any>>("/public/pdfs/gov/*.pdf");
+const govPdfs = await Astro.glob<Record<string, any>>(
+  "../../../public/pdfs/gov/*.pdf"
+);
 const mediaPdfs = await Astro.glob<Record<string, any>>(
   "/public/pdfs/media/*.pdf"
 );
@@ -40,13 +42,7 @@ import "../../styles/globals.css";
           {
             govPdfs.map((f) => (
               <li>
-                <a
-                  href={replacePathname(
-                    Astro.url,
-                    import.meta.env.BASE_URL +
-                      String(f.default).replace("public/", "")
-                  )}
-                >
+                <a href={import.meta.env.BASE_URL + String(f.default)}>
                   {String(f.default).split("/").pop()}
                 </a>
               </li>
@@ -60,13 +56,7 @@ import "../../styles/globals.css";
           {
             mediaPdfs.map((f) => (
               <li>
-                <a
-                  href={replacePathname(
-                    Astro.url,
-                    import.meta.env.BASE_URL +
-                      String(f.default).replace("public/", "")
-                  )}
-                >
+                <a href={import.meta.env.BASE_URL + String(f.default)}>
                   {String(f.default).split("/").pop()}
                 </a>
               </li>
@@ -80,13 +70,7 @@ import "../../styles/globals.css";
           {
             miscPdfs.map((f) => (
               <li>
-                <a
-                  href={replacePathname(
-                    Astro.url,
-                    import.meta.env.BASE_URL +
-                      String(f.default).replace("public/", "")
-                  )}
-                >
+                <a href={import.meta.env.BASE_URL + String(f.default)}>
                   {String(f.default).split("/").pop()}
                 </a>
               </li>

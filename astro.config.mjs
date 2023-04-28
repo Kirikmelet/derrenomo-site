@@ -10,4 +10,7 @@ export default defineConfig({
   ],
   site: "https://Kirikmelet.github.io",
   base: "/derrenomo-site",
+  server: {
+    host: true,
+  },
 });
