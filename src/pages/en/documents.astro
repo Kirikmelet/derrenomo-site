@@ -11,9 +11,7 @@ const miscPdfs = await Astro.glob<Record<string, any>>(
 function replacePathname(url: URL, newPathname: string): URL {
   return new URL(newPathname, url);
 }
-const baseUrl = new URL("/derrenomo-site/", Astro.url);
 import "../../styles/globals.css";
-import { baseUrl as baseUrlString } from "../../utils/base";
 ---
 
 <BaseLayout title="Documents">
@@ -42,7 +40,13 @@ import { baseUrl as baseUrlString } from "../../utils/base";
           {
             govPdfs.map((f) => (
               <li>
-                <a href={replacePathname(baseUrl, String(f.default).slice(1))}>
+                <a
+                  href={replacePathname(
+                    Astro.url,
+                    import.meta.env.BASE_URL +
+                      String(f.default).replace("public/", "")
+                  )}
+                >
                   {String(f.default).split("/").pop()}
                 </a>
               </li>
@@ -56,7 +60,13 @@ import { baseUrl as baseUrlString } from "../../utils/base";
           {
             mediaPdfs.map((f) => (
               <li>
-                <a href={replacePathname(baseUrl, String(f.default))}>
+                <a
+                  href={replacePathname(
+                    Astro.url,
+                    import.meta.env.BASE_URL +
+                      String(f.default).replace("public/", "")
+                  )}
+                >
                   {String(f.default).split("/").pop()}
                 </a>
               </li>
@@ -70,7 +80,13 @@ import { baseUrl as baseUrlString } from "../../utils/base";
           {
             miscPdfs.map((f) => (
               <li>
-                <a href={replacePathname(baseUrl, String(f.default))}>
+                <a
+                  href={replacePathname(
+                    Astro.url,
+                    import.meta.env.BASE_URL +
+                      String(f.default).replace("public/", "")
+                  )}
+                >
                   {String(f.default).split("/").pop()}
                 </a>
               </li>
