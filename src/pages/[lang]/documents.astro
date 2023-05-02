@@ -1,0 +1,149 @@
+---
+import ContentStyles from "../../components/ContentStyles.astro";
+import TableOfContents from "../../components/TableOfContents.astro";
+import { supportedLanguages } from "../../i18n/translations";
+import {
+  useTranslationDict,
+  type TranslationDict,
+  getLangFromUrl,
+} from "../../i18n/utils";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+const govPdfs = await Astro.glob<Record<string, any>>(
+  "../../../public/pdfs/gov/*.pdf"
+);
+const mediaPdfs = await Astro.glob<Record<string, any>>(
+  "/public/pdfs/media/*.pdf"
+);
+const miscPdfs = await Astro.glob<Record<string, any>>(
+  "/public/pdfs/misc/*.pdf"
+);
+function replacePathname(url: URL, newPathname: string): URL {
+  return new URL(newPathname, url);
+}
+import "../../styles/globals.css";
+
+const translationDict: TranslationDict = {
+  en: {
+    title: "Documents",
+    main_header: "Derrenomo Government Central Asset List",
+    main_desc:
+      "This webpage contains all the documents and necessary files relating to the government of the Nation of Derrenomo. Feel free to access these PDF files anytime.",
+    gov_pdf: "Government PDFs",
+    media_pdf: "Multimedia PDFs",
+    misc_pdf: "Miscellaneous PDFs",
+  },
+  id: {
+    title: "Dokumen",
+    main_header: "Daftar Aset Pusat Pemerintah Derrenomo",
+    main_desc:
+      "This webpage contains all the documents and necessary files relating to the government of the Nation of Derrenomo. Feel free to access these PDF files anytime.",
+    gov_pdf: "PDF Pemerintah",
+    media_pdf: "PDF Media",
+    misc_pdf: "PDF Bermacam-Macam",
+  },
+  ja: {
+    title: "書類",
+    main_header: "デレノモ中央政府の資産一覧",
+    main_desc:
+      "このページには、すべての必要なドキュメントと関連ファイルが含まれています デレノモ国家政府。 このPDFファイルにアクセスしてください いつでも。",
+    gov_pdf: "政府のPDF",
+    media_pdf: "メディアのPDF",
+    misc_pdf: "その他のPDF",
+  },
+  zh: {
+    title: "文件",
+    main_header: "德认诺莫中央政府资产清单",
+    main_desc:
+      "此页面包含所有必需的文件和相关文件德认诺莫国政府。 随时访问此PDF文件任何时候。",
+    gov_pdf: "政府PDF",
+    media_pdf: "多媒体PDF",
+    misc_pdf: "杂项PDF",
+  },
+  it: {
+    title: "Dokumenti",
+    main_header: "Elenco dei Beni del governo Centrale di Derrenomo",
+    main_desc:
+      "Questa pagina contiene tutti i documenti necessari e i relativi file Governo della nazione Derrenomo. Sentiti libero di accedere a questo file PDF in qualsiasi momento.",
+    gov_pdf: "PDF Governativi",
+    media_pdf: "PDF Multimediali",
+    misc_pdf: "PDF Vari",
+  },
+};
+const useT = useTranslationDict(translationDict, getLangFromUrl(Astro.url));
+export function getStaticPaths() {
+  return Object.keys(supportedLanguages).map((f) => {
+    return {
+      params: {
+        lang: f,
+      },
+    };
+  });
+}
+---
+
+<BaseLayout title={useT("title")}>
+  <ContentStyles />
+  <main>
+    <header>
+      <h1>{useT("main_header")}</h1>
+      <p>
+        {useT("main_desc")}
+      </p>
+      <TableOfContents>
+        <li>
+          <a href="#GovPdf">{useT("gov_pdf")}</a>
+        </li>
+        <li>
+          <a href="#MediaPdf">{useT("media_pdf")}</a>
+        </li>
+        <li>
+          <a href="#MiscPdf">{useT("misc_pdf")}</a>
+        </li>
+      </TableOfContents>
+    </header>
+    <article>
+      <div>
+        <h2 id="GovPdf">{useT("gov_pdf")}</h2>
+        <ul>
+          {
+            govPdfs.map((f) => (
+              <li>
+                <a href={String(f.default)}>
+                  {String(f.default).split("/").pop()}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div>
+        <h2 id="MediaPdf">{useT("media_pdf")}</h2>
+        <ul>
+          {
+            mediaPdfs.map((f) => (
+              <li>
+                <a href={String(f.default)}>
+                  {String(f.default).split("/").pop()}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div>
+        <h2 id="MiscPdf">{useT("misc_pdf")}</h2>
+        <ul>
+          {
+            miscPdfs.map((f) => (
+              <li>
+                <a href={String(f.default)}>
+                  {String(f.default).split("/").pop()}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </article>
+  </main>
+</BaseLayout>

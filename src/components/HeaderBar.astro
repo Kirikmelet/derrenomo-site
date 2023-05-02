@@ -13,7 +13,7 @@ import { baseUrl } from "../utils/base";
 const translationDict: TranslationDict = {
   en: {
     menu: "Menu",
-    topics: "Topics",
+    topics: "Articles",
     news: "News",
     ministries: "Ministries",
     documents: "Documents",
@@ -21,7 +21,7 @@ const translationDict: TranslationDict = {
   },
   ja: {
     menu: "メニュー",
-    topics: "話題",
+    topics: "記事",
     news: "ニュース",
     ministries: "省庁",
     documents: "書類",
@@ -29,7 +29,7 @@ const translationDict: TranslationDict = {
   },
   zh: {
     menu: "菜单",
-    topics: "主题",
+    topics: "文章",
     news: "新闻",
     ministries: "部委",
     documents: "文件",
@@ -37,7 +37,7 @@ const translationDict: TranslationDict = {
   },
   id: {
     menu: "Menu",
-    topics: "Topik",
+    topics: "Artikel",
     news: "Berita",
     ministries: "Kementerian",
     documents: "Dokumen",
@@ -45,7 +45,7 @@ const translationDict: TranslationDict = {
   },
   it: {
     menu: "Menu",
-    topics: "Temi",
+    topics: "Articoli",
     news: "Notizie",
     ministries: "Ministeri",
     documents: "Documenti",
@@ -66,6 +66,7 @@ const useT = useTranslationDict(translationDict, getLangFromUrl(Astro.url));
         alt="Seal"
         widths={[32, 64, 128, 512]}
         sizes="(max-width: 600px) 70px, (max-width: 1920px) 40px, 50px"
+        formats={["avif", "png", "webp"]}
       />
     </a>
     <a href="javascript:;" class:list={["no_js"]} id="HeaderExpand"
@@ -73,40 +74,35 @@ const useT = useTranslationDict(translationDict, getLangFromUrl(Astro.url));
     >
     <a
       href={changeLangRedirect(
-        new URL(`/${baseUrl}en/topics`, Astro.url),
+        new URL(`/${baseUrl}en/articles`, Astro.url),
         lang
       )}
-      class:list={["no_js"]}
-      id="HeaderLink">{useT("topics")}</a
+      class:list={["no_js", "HeaderLink"]}>{useT("topics")}</a
     >
     <a
       href={changeLangRedirect(new URL(`/${baseUrl}en/news`, Astro.url), lang)}
-      class:list={["no_js"]}
-      id="HeaderLink">{useT("news")}</a
+      class:list={["no_js", "HeaderLink"]}>{useT("news")}</a
     >
     <a
       href={changeLangRedirect(
         new URL(`/${baseUrl}en/ministries`, Astro.url),
         lang
       )}
-      class:list={["no_js"]}
-      id="HeaderLink">{useT("ministries")}</a
+      class:list={["no_js", "HeaderLink"]}>{useT("ministries")}</a
     >
     <a
       href={changeLangRedirect(
         new URL(`/${baseUrl}en/documents`, Astro.url),
         lang
       )}
-      class:list={["no_js"]}
-      id="HeaderLink">{useT("documents")}</a
+      class:list={["no_js", "HeaderLink"]}>{useT("documents")}</a
     >
     <a
       href={changeLangRedirect(
         new URL(`/${baseUrl}en/services`, Astro.url),
         lang
       )}
-      class:list={["no_js"]}
-      id="HeaderLink">{useT("services")}</a
+      class:list={["no_js", "HeaderLink"]}>{useT("services")}</a
     >
   </div>
 </nav>
@@ -133,7 +129,7 @@ const useT = useTranslationDict(translationDict, getLangFromUrl(Astro.url));
     /* border-bottom-right-radius: 8px; */
     transition: flex-direction 1s;
   }
-  a {
+  #HeaderDiv a {
     color: var(--text-color-bright);
     text-decoration: none;
     border: 1px solid var(--primary-color-brighter);
@@ -141,10 +137,10 @@ const useT = useTranslationDict(translationDict, getLangFromUrl(Astro.url));
     padding: 5px;
     transition: background-color 0.2s ease-in-out;
   }
-  a:hover {
+  #HeaderDiv a:hover {
     background-color: var(--primary-color-brighter);
   }
-  a:visited {
+  #HeaderDiv a:visited {
     text-decoration: none;
   }
 
@@ -155,7 +151,7 @@ const useT = useTranslationDict(translationDict, getLangFromUrl(Astro.url));
     display: none;
   }
 
-  #HeaderLink {
+  .HeaderLink {
     display: initial;
   }
 
@@ -173,13 +169,13 @@ const useT = useTranslationDict(translationDict, getLangFromUrl(Astro.url));
     #HeaderExpand {
       display: initial;
     }
-    #HeaderLink {
+    .HeaderLink {
       display: none;
     }
-    #HeaderLink.no_js {
+    .HeaderLink.no_js {
       display: initial;
     }
-    #HeaderLink.enabled {
+    .HeaderLink.enabled {
       display: initial;
     }
   }
@@ -203,7 +199,7 @@ const useT = useTranslationDict(translationDict, getLangFromUrl(Astro.url));
   };
   expandButton?.addEventListener("click", () => {
     console.debug("hello");
-    document.querySelectorAll("#HeaderLink").forEach((el) => {
+    document.querySelectorAll(".HeaderLink").forEach((el) => {
       //if (el.classList.contains("enabled")) {
       //  el.classList.remove("enabled");
       //} else {

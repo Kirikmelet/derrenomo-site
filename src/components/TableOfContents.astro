@@ -1,9 +1,33 @@
 ---
+import {
+  useTranslationDict,
+  type TranslationDict,
+  getLangFromUrl,
+} from "../i18n/utils";
+
+const translationDict: TranslationDict = {
+  en: {
+    name: "Table of Contents",
+  },
+  id: {
+    name: "Daftar Isi",
+  },
+  ja: {
+    name: "目次",
+  },
+  zh: {
+    name: "目录",
+  },
+  it: {
+    name: "Sommario",
+  },
+};
+const useT = useTranslationDict(translationDict, getLangFromUrl(Astro.url));
 ---
 
 <div>
   <details>
-    <summary>Table of Contents</summary>
+    <summary>{useT("name")}</summary>
     <ol>
       <slot />
     </ol>

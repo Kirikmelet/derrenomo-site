@@ -1,0 +1,46 @@
+---
+import { getCollection } from "astro:content";
+import ContentStyles from "../../../components/ContentStyles.astro";
+import {
+  supportedLanguageKey,
+  supportedLanguages,
+} from "../../../i18n/translations";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import type { InferGetStaticParamsType } from "astro";
+
+export function getStaticPaths() {
+  return Object.keys(supportedLanguages).map((lang) => {
+    return {
+      params: {
+        lang: lang as supportedLanguageKey,
+      },
+    };
+  });
+}
+
+const { lang } = Astro.params as InferGetStaticParamsType<
+  typeof getStaticPaths
+>;
+
+const news = (await getCollection("news")).filter((news) => {
+  return news.slug.split("/").includes(lang);
+});
+---
+
+<BaseLayout title="News">
+  <ContentStyles />
+  <main>
+    <header><h1>News</h1></header>
+    <article>
+      {
+        news.map((news) => {
+          return (
+            <div>
+              <h2>{news.data.title}</h2>
+            </div>
+          );
+        })
+      }
+    </article>
+  </main>
+</BaseLayout>

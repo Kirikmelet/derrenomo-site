@@ -1,31 +1,32 @@
-import { defaultLanguage, supportedLanguages } from "./translations";
+import {
+  defaultLanguage,
+  supportedLanguageKey,
+  supportedLanguages,
+} from "./translations";
 
-export interface TranslationDict {
-  [lang: string]: {
-    [key: string]: string;
-  };
-}
+export type TranslationDict = Record<
+  supportedLanguageKey,
+  Record<string, string>
+>;
 
-export function getLangFromUrl(url: URL): string {
-  const [, lang] = url.pathname.split("/");
-  if (lang in supportedLanguages) return lang;
-  return defaultLanguage;
-}
-
-export function changeLangRedirect(url: URL, lang: string): URL {
-  return new URL(
-    url.pathname.replace(`/${getLangFromUrl(url)}`, `/${lang}`),
-    url
+export function getLangFromUrl(url: URL): supportedLanguageKey {
+  const params = url.pathname.split("/");
+  return (
+    (params.filter(
+      (f) => f in supportedLanguages
+    )[0] as supportedLanguageKey) ?? defaultLanguage
   );
+}
+
+export function changeLangRedirect(url: URL, lang: supportedLanguageKey): URL {
+  const oldLang = getLangFromUrl(url);
+  return new URL(url.pathname.replace(`/${oldLang}`, `/${lang}`), url);
 }
 
 export function useTranslationDict(
   dict: TranslationDict,
-  lang: string
-): (key: string) => string {
-  return function (key: string) {
-    return (
-      dict[lang][key] || dict[defaultLanguage][key] || `Unknown key: ${key}`
-    );
-  };
+  lang: supportedLanguageKey
+): (key: keyof (typeof dict)[typeof defaultLanguage]) => string {
+  return (key: keyof (typeof dict)[typeof defaultLanguage]) =>
+    dict[lang][key] || dict[defaultLanguage][key] || `Unknown key: ${key}`;
 }

@@ -1,5 +1,10 @@
 ---
-import { supportedLanguages } from "../../i18n/translations";
+import { getCollection } from "astro:content";
+import {
+  defaultLanguage,
+  supportedLanguageKey,
+  supportedLanguages,
+} from "../../i18n/translations";
 import {
   useTranslationDict,
   type TranslationDict,
@@ -7,6 +12,8 @@ import {
 } from "../../i18n/utils";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import "../../styles/globals.css";
+import { generateBlogUrl } from "../../content/utils";
+import type { InferGetStaticParamsType } from "astro";
 
 const translationDict: TranslationDict = {
   en: {
@@ -32,7 +39,7 @@ const translationDict: TranslationDict = {
   zh: {
     title: "索引",
     welcome_text: "欢迎您",
-    officiality_text: "德雷诺莫国政府官方网站",
+    officiality_text: "德认诺莫国政府官方网站",
     featured_header: "特色",
     latest_news: "最新消息",
     services: "服务",
@@ -61,16 +68,22 @@ const translationDict: TranslationDict = {
   },
 } as const;
 
-const { lang } = Astro.params;
+type Params = InferGetStaticParamsType<typeof getStaticPaths>;
 
-const useT = useTranslationDict(translationDict, lang!);
+const { lang } = Astro.params as Params;
+
+const useT = useTranslationDict(translationDict, lang);
+
+const articles = await getCollection("articles");
 
 export function getStaticPaths() {
-  let params = [];
-  for (const i in supportedLanguages) {
-    params.push({ params: { lang: i } });
-  }
-  return params;
+  return Object.keys(supportedLanguages).map((f) => {
+    return {
+      params: {
+        lang: f as supportedLanguageKey,
+      },
+    };
+  });
 }
 ---
 
@@ -80,7 +93,23 @@ export function getStaticPaths() {
       <h1>{useT("welcome_text")}<span>Derrenomo.Gov</span></h1>
       <auto>{useT("officiality_text")}</auto>
     </header>
-    <div><h2>{useT("featured_header")}</h2></div>
+    <div>
+      <h2>{useT("featured_header")}</h2>
+      {
+        articles
+          .filter((article) => article.slug.includes(lang || defaultLanguage))
+          .map((article) => {
+            return (
+              <div>
+                <h3>{article.data.title}</h3>
+                <a href={generateBlogUrl(article.slug, "articles", Astro.url)}>
+                  <p>{article.data.description}</p>
+                </a>
+              </div>
+            );
+          })
+      }
+    </div>
     <article>
       <div id="NewsDiv">
         <h2>{useT("latest_news")}</h2>

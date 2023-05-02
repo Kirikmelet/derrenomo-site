@@ -2,7 +2,9 @@ interface SupportedLanguages {
   [key: string]: string;
 }
 
-export const supportedLanguages: SupportedLanguages = {
+export type supportedLanguageKey = "en" | "id" | "ja" | "zh" | "it";
+
+export const supportedLanguages: Record<supportedLanguageKey, string> = {
   en: "English",
   id: "Bahasa Indonesia",
   ja: "日本語",
@@ -10,4 +12,4 @@ export const supportedLanguages: SupportedLanguages = {
   it: "Italiano",
 } as const;
 
-export const defaultLanguage = "en";
+export const defaultLanguage: supportedLanguageKey = "en" as const;

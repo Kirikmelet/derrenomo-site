@@ -1,0 +1,75 @@
+---
+import { getCollection } from "astro:content";
+import ContentStyles from "../../../../components/ContentStyles.astro";
+import {
+  supportedLanguages,
+  type supportedLanguageKey,
+} from "../../../../i18n/translations";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import type { InferGetStaticParamsType } from "astro";
+import { generateBlogUrl } from "../../../../content/utils";
+
+export async function getStaticPaths() {
+  const langs = Object.keys(supportedLanguages);
+  const articles = await getCollection("articles");
+  return langs.flatMap((lang) => {
+    const langArticles = articles
+      .filter((art) => art.slug.split("/").includes(lang))
+      .flatMap((art) => art.data.topics);
+    return langArticles.map((topic) => {
+      return {
+        params: {
+          lang,
+          topic: topic,
+        },
+      };
+    });
+  });
+}
+
+const { topic, lang } = Astro.params as InferGetStaticParamsType<
+  typeof getStaticPaths
+>;
+
+const articles = (await getCollection("articles"))
+  .filter((art) => art.slug.split("/").includes(lang))
+  .filter((art) => art.data.topics.includes(topic));
+---
+
+<BaseLayout title={"no"}>
+  <ContentStyles />
+  <main>
+    <header>
+      <h1>{topic}</h1>
+      <p>lang: {lang}</p>
+      <a href={new URL(`../`, Astro.url).href}>Go back</a>
+    </header>
+    <article>
+      {
+        articles.length > 0 ? (
+          <ul>
+            {articles.map((art) => {
+              return (
+                <li>
+                  <div>
+                    <a href={generateBlogUrl(art.slug, "articles", Astro.url)}>
+                      {art.data.title}
+                    </a>
+                    <p>
+                      {art.data.date.toLocaleString(lang, {
+                        dateStyle: "full",
+                      })}
+                    </p>
+                    <p>{art.data.description}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p>No articles? (how)</p>
+        )
+      }
+    </article>
+  </main>
+</BaseLayout>

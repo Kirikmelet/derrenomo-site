@@ -26,7 +26,7 @@ const translationDict: TranslationDict = {
     fallback: "このページにはコンテンツがありません!",
   },
   zh: {
-    title_suffix: "德雷诺莫国官方网站",
+    title_suffix: "德认诺莫国官方网站",
     fallback: "此页面缺少内容！",
   },
   it: {
@@ -40,20 +40,20 @@ const useT = useTranslationDict(translationDict, lang);
 <html lang={lang}>
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href={iconPng.src} />
+    <link rel="icon" type="image/png" href={iconPng.src} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     {description && <meta name="description" content={description} />}
     <title>{`${title} | ${useT("title_suffix")}`}</title>
   </head>
   <body>
+    <NoJSBar />
     <HeaderBar />
     <div id="BodyContainer">
       <slot>
         <p>This page is missing content!</p>
       </slot>
     </div>
-    <NoJSBar />
     <FooterBar />
   </body>
 </html>

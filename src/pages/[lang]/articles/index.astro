@@ -1,0 +1,236 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import {
+  TranslationDict,
+  getLangFromUrl,
+  useTranslationDict,
+} from "../../../i18n/utils";
+import {
+  supportedLanguageKey,
+  supportedLanguages,
+} from "../../../i18n/translations";
+import ContentStyles from "../../../components/ContentStyles.astro";
+import type { InferGetStaticParamsType } from "astro";
+import "../../../styles/globals.css";
+import NoJSBar from "../../../components/NoJSBar.astro";
+
+let topics: Record<string, number> = {};
+const articles = await getCollection("articles");
+articles
+  .filter((article) =>
+    article.slug.split("/").includes(getLangFromUrl(Astro.url))
+  )
+  .forEach((article) => {
+    for (const i of article.data.topics) {
+      topics[i] = topics[i] !== undefined ? topics[i] + 1 : 1;
+    }
+  });
+
+export function getStaticPaths() {
+  return Object.keys(supportedLanguages).map((lang) => {
+    return {
+      params: {
+        lang: lang as supportedLanguageKey,
+      },
+    };
+  });
+}
+
+const { lang } = Astro.params as InferGetStaticParamsType<
+  typeof getStaticPaths
+>;
+
+const translationDict: TranslationDict = {
+  en: {
+    title: "Articles",
+  },
+  id: {
+    title: "Artikel",
+  },
+  ja: {
+    title: "記事",
+  },
+  zh: {
+    title: "文章",
+  },
+  it: {
+    title: "Articoli",
+  },
+};
+const useT = useTranslationDict(translationDict, lang);
+
+const baseUrl: string = `${import.meta.env.BASE_URL}${lang}`;
+
+function generateTopicHref(topic: string, baseUrl: URL): URL {
+  return new URL(
+    `${import.meta.env.BASE_URL}${lang}/articles/topics/${encodeURIComponent(
+      topic
+    )}`,
+    baseUrl
+  );
+}
+---
+
+<BaseLayout title={useT("title")}>
+  <ContentStyles />
+  <main>
+    <header>
+      <h1>{useT("title")}</h1>
+      <p>Contains topics in Article</p>
+    </header>
+    <article>
+      <div id="TopicSearch" class="NoJs">
+        <h2>Search</h2>
+        <input
+          id="TopicSearchInput"
+          name="TopicSearchInput"
+          list="TopicSearchInputList"
+          type="search"
+          autocomplete="off"
+        />
+        <datalist id="TopicSearchInputList">
+          {
+            Object.keys(topics).map((key) => {
+              return <option value={`topic:${key}`} />;
+            })
+          }
+          {
+            articles
+              .filter((art) => {
+                return art.slug.split("/").includes(lang);
+              })
+              .map((art) => {
+                return <option value={`title:${art.data.title}`} />;
+              })
+          }
+        </datalist>
+        <button type="button" id="TopicSearchSubmit">Go-To</button>
+        <noscript>
+          <p>Search feature required JavaScript to be enabled!</p>
+        </noscript>
+      </div>
+      <div id="TopicGrid">
+        <h2>List</h2>
+        {
+          Object.keys(topics)
+            .sort()
+            .map((key: string) => {
+              return (
+                <div class="TopicGridItem">
+                  <a href={generateTopicHref(key, Astro.url)}>
+                    {key} ({topics[key]})
+                  </a>
+                </div>
+              );
+            })
+        }
+      </div>
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  div#TopicGrid {
+    /* display: grid; */
+    /* grid-template-columns: repeat(auto-fit, fit-content); */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  div#TopicGrid .TopicGridItem {
+    padding: 10px;
+    text-align: center;
+    background-color: var(--teritiary-color);
+    border-radius: 10px;
+    border: 1px var(--teritiary-color-darker) solid;
+    transition: background-color 0.1s ease-in-out;
+  }
+  div#TopicGrid .TopicGridItem:hover {
+    background-color: var(--teritiary-color);
+  }
+  a,
+  a:visited {
+    color: var(--text-color);
+    text-decoration: none;
+  }
+  div#TopicSearch {
+    display: flex;
+    flex-direction: column;
+  }
+  div#TopicSearch.NoJs {
+    display: none;
+  }
+  input[type="search"] {
+    background-color: var(--background-color);
+    height: 1.15rem;
+    color: var(--text-color);
+    font-size: var(--font-size);
+    height: fit-content;
+    border: 1px solid var(--text-color);
+    padding: 15px;
+    margin-bottom: 5px;
+  }
+  button {
+    appearance: none;
+    border: 1px solid var(--primary-color-brighter);
+    font-size: var(--font-size);
+    border-radius: 10px;
+    color: var(--text-color-bright);
+    background-color: var(--primary-color);
+  }
+  button:hover {
+    background-color: var(--primary-color-brighter);
+  }
+  button:active {
+    background-color: var(--primary-color-darker);
+  }
+  @media only screen and (max-width: 1200px) {
+    button {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+  }
+</style>
+
+<script define:vars={{ topics, articles, lang }}>
+  document
+    .getElementById("TopicSearchSubmit")
+    .addEventListener("click", (ev) => {
+      ev.preventDefault();
+      const searchParam = document.getElementById("TopicSearchInput").value;
+      if (!searchParam || searchParam.length <= 0) {
+        return;
+      }
+      if (searchParam.startsWith("topic:")) {
+        const topic = searchParam.slice("topic:".length);
+        if (topic in topics) {
+          window.location = new URL(
+            `${
+              import.meta.env.BASE_URL
+            }${lang}/articles/topics/${encodeURIComponent(topic)}`,
+            window.location
+          );
+        }
+      } else if (searchParam.startsWith("title:")) {
+        const title = searchParam.slice("title:".length);
+        const slug = articles.find((art) => (art.data.title = title));
+        if (!slug) {
+          return;
+        }
+        const [, ...path] = slug.slug.split("/");
+        window.location = "https://google.com";
+        window.location = new URL(
+          `${import.meta.env.BASE_URL}${lang}/articles/${
+            path.join("/") || undefined
+          }`,
+          window.location
+        );
+      }
+    });
+</script>
+<script is:inline>
+  document.querySelectorAll(".NoJs").forEach((el) => {
+    el.classList.remove("NoJs");
+  });
+</script>

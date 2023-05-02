@@ -1,10 +1,33 @@
 ---
+import {
+  useTranslationDict,
+  type TranslationDict,
+  getLangFromUrl,
+} from "../i18n/utils";
 import "../styles/globals.css";
+const translationDict: TranslationDict = {
+  en: {
+    data: "JAVASCRIPT NOT ENABLED",
+  },
+  id: {
+    data: "JAVASCRIPT TIDAK AKTIF",
+  },
+  ja: {
+    data: "JAVASCRIPTが無効です",
+  },
+  zh: {
+    data: "JAVASCRIPT未启用",
+  },
+  it: {
+    data: "JAVASCRIPT NON ABILITATO",
+  },
+};
+const useT = useTranslationDict(translationDict, getLangFromUrl(Astro.url));
 ---
 
 <noscript>
   <div>
-    <p>JAVASCRIPT NOT ENABLED</p>
+    <p>{useT("data")}</p>
   </div>
 </noscript>
 
@@ -19,11 +42,8 @@ import "../styles/globals.css";
     justify-content: center;
     align-items: center;
     text-align: center;
-    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
   }
 </style>

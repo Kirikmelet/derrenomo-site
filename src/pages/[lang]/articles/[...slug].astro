@@ -1,0 +1,45 @@
+---
+import { CollectionEntry, getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getBlogLang, joinBlogSlug } from "../../../content/utils";
+import ContentStyles from "../../../components/ContentStyles.astro";
+import { getLangFromUrl } from "../../../i18n/utils";
+interface Props {
+  article: CollectionEntry<"articles">;
+}
+
+export async function getStaticPaths() {
+  const articles = await getCollection("articles");
+  return articles.map((article) => {
+    const [lang, ...slug] = article.slug.split("/");
+    return {
+      params: { lang, slug: joinBlogSlug(slug) },
+      props: { article },
+    };
+  });
+}
+const { article } = Astro.props;
+const { Content } = await article.render();
+const lang = getBlogLang(article.slug);
+const articleDate: string = article.data.date.toLocaleDateString(lang, {
+  dateStyle: "full",
+});
+---
+
+<BaseLayout title={article.data.title}>
+  <ContentStyles />
+  <main>
+    <header>
+      <h1>{article.data.title}</h1>
+      <p>Author: {article.data.author}</p>
+      <p>
+        Date: {articleDate}
+      </p>
+      <article>
+        <div>
+          <Content />
+        </div>
+      </article>
+    </header>
+  </main>
+</BaseLayout>
