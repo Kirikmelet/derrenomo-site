@@ -1,6 +1,6 @@
 ---
 import "../styles/globals.css";
-import { supportedLanguages } from "../i18n/translations";
+import { supportedLanguageKey, supportedLanguages } from "../i18n/translations";
 import { TranslationDict, changeLangRedirect } from "../i18n/utils";
 
 const translationDict: TranslationDict = {
@@ -12,8 +12,11 @@ const translationDict: TranslationDict = {
   {
     Object.keys(supportedLanguages).map((key) => (
       <li>
-        <a href={changeLangRedirect(Astro.url, key).href}>
-          {supportedLanguages[key]}
+        <a
+                  class:list={["anchor_static_bright", "padding_small"]}
+          href={changeLangRedirect(Astro.url, key as supportedLanguageKey).href}
+        >
+          {supportedLanguages[key as supportedLanguageKey]}
         </a>
       </li>
     ))
@@ -37,12 +40,6 @@ const translationDict: TranslationDict = {
   }
   li:hover {
     background-color: var(--primary-color-brighter);
-  }
-  a,
-  a:visited {
-    text-decoration: none;
-    color: var(--text-color-bright);
-    padding: 5px;
   }
   @media only screen and (max-width: 600px) {
     ul {

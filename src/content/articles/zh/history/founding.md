@@ -7,7 +7,7 @@ topics: ["history", "featured", "important"]
 description: Derrenomo, a country in a server of possibilities, but how did it come to be?
 ---
 
-![Neutral Area](/neutral_area.png)
+![Neutral Area](/derrenomo-site/neutral_area.png)
 
 # 我的世界中德认诺莫的创建
 

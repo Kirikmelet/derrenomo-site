@@ -53,7 +53,10 @@ const useT = useTranslationDict(translationDict, lang);
             .slice(0, 5)
             .map((article) => (
               <li>
-                <a href={generateBlogUrl(article.slug, "articles", Astro.url)}>
+                <a
+                  class:list={["anchor_static_bright", "padding_small"]}
+                  href={generateBlogUrl(article.slug, "articles", Astro.url)}
+                >
                   {article.data.title}
                 </a>
               </li>
@@ -72,6 +75,7 @@ const useT = useTranslationDict(translationDict, lang);
             .map((article) => (
               <li>
                 <a
+                  class:list={["anchor_static_bright"]}
                   href={generateNewsUrl(
                     article.slug,
                     article.data.section,
@@ -102,7 +106,7 @@ const useT = useTranslationDict(translationDict, lang);
     flex-direction: column;
   }
   h2 {
-    text-align: left ;
+    text-align: left;
   }
   div#FooterMain {
     display: grid;
@@ -118,17 +122,12 @@ const useT = useTranslationDict(translationDict, lang);
     text-align: left;
     padding: 0;
   }
-  a,
-  a:visited {
-    color: var(--text-color-bright);
-    text-decoration: underline;
-  }
   @media only screen and (max-width: 600px) {
     div#FooterMain {
       grid-template-columns: repeat(1, calc(100vw / 1));
     }
     ul {
-    width: 80vw;
+      width: 80vw;
     }
   }
 </style>

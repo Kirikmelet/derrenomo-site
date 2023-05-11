@@ -126,6 +126,11 @@ a.anchor_static:visited {
   text-decoration: none;
 }
 
+a.anchor_static_bright,
+a.anchor_static_bright:visited {
+  color: var(--text-color-bright);
+}
+
 .button_style {
     color: var(--text-color-bright);
     text-decoration: none;
@@ -136,4 +141,11 @@ a.anchor_static:visited {
 }
 .button_style:hover { 
     background-color: var(--primary-color-brighter);
+}
+
+.padding_small {
+  padding: 5px;
+}
+.padding_medium {
+  padding: 15px;
 }
