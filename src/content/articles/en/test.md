@@ -1,9 +1,9 @@
 ---
-title: Hello World!
+title: This is a featured title telling you how to get a passport
 date: 2023-04-30
 author: Troy Dwijanto
 draft: false
-topics: [language/human/english, orrrr, is/it/smol??, yes]
+topics: [featured]
 ---
 
 # Hello World
@@ -19,4 +19,4 @@ fn main(): Result<(), Box<std::err::Error>> {
 
 [stuff][def]
 
-[def]: </pdfs/gov/Daftar Partai Politik.pdf>
+[def]: </derrenomo-site/pdfs/gov/Daftar Partai Politik.pdf>

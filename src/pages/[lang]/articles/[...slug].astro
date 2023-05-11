@@ -3,7 +3,11 @@ import { CollectionEntry, getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { getBlogLang, joinBlogSlug } from "../../../content/utils";
 import ContentStyles from "../../../components/ContentStyles.astro";
-import { getLangFromUrl } from "../../../i18n/utils";
+import {
+  TranslationDict,
+  getLangFromUrl,
+  useTranslationDict,
+} from "../../../i18n/utils";
 interface Props {
   article: CollectionEntry<"articles">;
 }
@@ -24,6 +28,40 @@ const lang = getBlogLang(article.slug);
 const articleDate: string = article.data.date.toLocaleDateString(lang, {
   dateStyle: "full",
 });
+
+const translationDict: TranslationDict = {
+  en: {
+    author: "Author",
+    date: "Date",
+    topics: "Topics",
+    summary: "Metadata",
+  },
+  id: {
+    author: "Penulis",
+    date: "Tanggal",
+    topics: "Topik",
+    summary: "Metadata",
+  },
+  zh: {
+    author: "作者",
+    date: "日期",
+    topics: "主题",
+    summary: "元数据",
+  },
+  ja: {
+    author: "著者",
+    date: "日付",
+    topics: "トピックス",
+    summary: "メタデータ",
+  },
+  it: {
+    author: "Autore",
+    date: "Data",
+    topics: "Argomenti",
+    summary: "Metadata",
+  },
+};
+const useT = useTranslationDict(translationDict, lang);
 ---
 
 <BaseLayout title={article.data.title}>
@@ -31,10 +69,17 @@ const articleDate: string = article.data.date.toLocaleDateString(lang, {
   <main>
     <header>
       <h1>{article.data.title}</h1>
-      <p>Author: {article.data.author}</p>
-      <p>
-        Date: {articleDate}
-      </p>
+      <details>
+        <summary>{useT("summary")}</summary>
+        <p>{useT("author")}: {article.data.author}</p>
+        <p>
+          {useT("date")}: {articleDate}
+        </p>
+        <p>{useT("topics")}:</p>
+        <ul>
+          {article.data.topics.map((topic) => <li>{topic}</li>)}
+        </ul>
+      </details>
       <article>
         <div>
           <Content />

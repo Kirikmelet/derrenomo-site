@@ -27,3 +27,10 @@ export function getBlogLang(slug: string): supportedLanguageKey {
   if (lang in supportedLanguages) return lang as supportedLanguageKey;
   return defaultLanguage;
 }
+export function generateNewsUrl(slug: String, section: string, baseUrl: URL): URL {
+  const [lang, ...slugs] = slug.split("/");
+  return new URL(
+    `${import.meta.env.BASE_URL}${lang}/news/${section}/${slugs}`,
+    baseUrl
+  );
+}

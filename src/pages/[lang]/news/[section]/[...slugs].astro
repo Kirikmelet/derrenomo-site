@@ -1,0 +1,62 @@
+---
+import { getCollection } from "astro:content";
+import { supportedLanguages } from "../../../../i18n/translations";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import type { InferGetStaticParamsType, InferGetStaticPropsType } from "astro";
+import ContentStyles from "../../../../components/ContentStyles.astro";
+
+export async function getStaticPaths() {
+  const news = await getCollection("news");
+  return Object.keys(supportedLanguages).flatMap((lang) => {
+    return news
+      .filter((art) => art.slug.split("/").includes(lang))
+      .flatMap((art) => {
+        const [, ...slugs] = art.slug.split("/");
+        const section = art.data.section;
+        return {
+          params: {
+            lang,
+            section,
+            slugs: slugs.join("/"),
+          },
+          props: {
+            article: art,
+          },
+        };
+      });
+  });
+}
+
+const { article } = Astro.props as InferGetStaticPropsType<
+  typeof getStaticPaths
+>;
+
+const { lang } = Astro.params as InferGetStaticParamsType<
+  typeof getStaticPaths
+>;
+
+const { Content } = await article.render();
+---
+
+<BaseLayout title="News">
+  <ContentStyles />
+  <main>
+    <header>
+      <h1>{article.data.title}</h1>
+      <p>Author: {article.data.author}</p>
+      <p>
+        Date: {
+          article.data.date.toLocaleDateString(lang, { dateStyle: "full" })
+        }
+      </p>
+      <p>
+        Section: {
+          article.data.section[0].toUpperCase() + article.data.section.slice(1)
+        }
+      </p>
+    </header>
+    <article>
+      <Content />
+    </article>
+  </main>
+</BaseLayout>

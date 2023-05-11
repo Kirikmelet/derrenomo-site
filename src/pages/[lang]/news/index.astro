@@ -7,6 +7,9 @@ import {
 } from "../../../i18n/translations";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import type { InferGetStaticParamsType } from "astro";
+import { generateNewsUrl } from "../../../content/utils";
+
+import { newsSection } from "../../../content/config";
 
 export function getStaticPaths() {
   return Object.keys(supportedLanguages).map((lang) => {
@@ -25,6 +28,7 @@ const { lang } = Astro.params as InferGetStaticParamsType<
 const news = (await getCollection("news")).filter((news) => {
   return news.slug.split("/").includes(lang);
 });
+
 ---
 
 <BaseLayout title="News">
@@ -33,10 +37,38 @@ const news = (await getCollection("news")).filter((news) => {
     <header><h1>News</h1></header>
     <article>
       {
+        news.length < 1 && (
+          <div class:list={["bg_secondary", "bg_round"]}>
+            <h2>Oops</h2>
+            <p>No News articles exist for your language</p>
+          </div>
+        )
+      }
+      {
         news.map((news) => {
           return (
-            <div>
+            <div class:list={["bg_secondary", "bg_round"]}>
               <h2>{news.data.title}</h2>
+              <a
+                class:list={["anchor_static"]}
+                href={generateNewsUrl(news.slug, news.data.section, Astro.url)}
+              >
+                Read More.
+              </a>
+              <ul>
+                <li>Author: {news.data.author}</li>
+                <li>
+                  Section:
+                  {news.data.section[0].toUpperCase() +
+                    news.data.section.slice(1)}
+                </li>
+                <li>
+                  Date:{" "}
+                  {news.data.date.toLocaleDateString(lang, {
+                    dateStyle: "full",
+                  })}
+                </li>
+              </ul>
             </div>
           );
         })

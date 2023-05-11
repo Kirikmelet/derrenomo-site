@@ -1,17 +1,89 @@
 ---
-import type { TranslationDict } from "../i18n/utils";
+import { getCollection } from "astro:content";
+import {
+  TranslationDict,
+  getLangFromUrl,
+  useTranslationDict,
+} from "../i18n/utils";
 import "../styles/globals.css";
 import FooterLicense from "./FooterComponents/FooterLicense.astro";
 import FooterLangSelect from "./FooterLangSelect.astro";
+import { defaultLanguage } from "../i18n/translations";
+import { generateBlogUrl, generateNewsUrl } from "../../content/utils";
+
+const articles = await getCollection("articles");
+const news = await getCollection("news");
+
+const lang = getLangFromUrl(Astro.url);
+
+const translationDict: TranslationDict = {
+  en: {
+    latest_articles: "Latest Articles",
+    latest_news: "Latest News",
+  },
+  id: {
+    latest_articles: "Artikel Terbaru",
+    latest_news: "Berita Terbaru",
+  },
+  zh: {
+    latest_articles: "最新文章",
+    latest_news: "最新新闻",
+  },
+  ja: {
+    latest_articles: "最新記事",
+    latest_news: "最新ニュース",
+  },
+  it: {
+    latest_articles: "Ultimi Articoli",
+    latest_news: "Ultime notizie",
+  },
+};
+
+const useT = useTranslationDict(translationDict, lang);
 ---
 
 <footer>
   <div id="FooterMain">
     <div>
-      <h2>Topic</h2>
+      <h2>{useT("latest_articles")}</h2>
+      <ul>
+        {
+          articles
+            .filter((art) => art.slug.includes(lang || defaultLanguage))
+            .slice(0, 5)
+            .map((article) => (
+              <li>
+                <a href={generateBlogUrl(article.slug, "articles", Astro.url)}>
+                  {article.data.title}
+                </a>
+              </li>
+            ))
+        }
+      </ul>
     </div>
     <div>
-      <h2>News</h2>
+      <h2>{useT("latest_news")}</h2>
+      <ul>
+        {
+          news
+            .filter((art) => art.slug.includes(lang || defaultLanguage))
+            .slice(0, 5)
+            .sort((a, b) => (a.data.date as any) - (b.data.date as any))
+            .map((article) => (
+              <li>
+                <a
+                  href={generateNewsUrl(
+                    article.slug,
+                    article.data.section,
+                    Astro.url
+                  )}
+                >
+                  {article.data.title}
+                </a>
+              </li>
+            ))
+        }
+      </ul>
     </div>
   </div>
   <FooterLangSelect />
@@ -30,14 +102,33 @@ import FooterLangSelect from "./FooterLangSelect.astro";
     flex-direction: column;
   }
   h2 {
-    text-decoration: underline;
+    text-align: left ;
   }
   div#FooterMain {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: repeat(2, calc(100vw / 2));
+  }
+  div#FooterMain div {
+    margin-left: 10vw;
   }
   p#License {
     font-size: 0.9rem;
+  }
+  ul {
+    text-align: left;
+    padding: 0;
+  }
+  a,
+  a:visited {
+    color: var(--text-color-bright);
+    text-decoration: underline;
+  }
+  @media only screen and (max-width: 600px) {
+    div#FooterMain {
+      grid-template-columns: repeat(1, calc(100vw / 1));
+    }
+    ul {
+    width: 80vw;
+    }
   }
 </style>

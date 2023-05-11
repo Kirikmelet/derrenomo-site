@@ -8,7 +8,7 @@ export const supportedLanguages: Record<supportedLanguageKey, string> = {
   en: "English",
   id: "Bahasa Indonesia",
   ja: "日本語",
-  zh: "普通话",
+  zh: "华话",
   it: "Italiano",
 } as const;
 

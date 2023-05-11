@@ -1,7 +1,7 @@
 import { z, defineCollection } from "astro:content";
 import type { supportedLanguageKey } from "../i18n/translations";
 
-const newsSection = z.enum([
+export const newsSection = z.enum([
   "national",
   "international",
   "political",
@@ -27,8 +27,8 @@ const news = defineCollection({
     date: z.date(),
     draft: z.boolean(),
     author: z.string(),
-    sections: newsSection.default("national"),
+    section: newsSection.default("national"),
   }),
 });
 
-export const collections = { articles };
+export const collections = { articles, news };

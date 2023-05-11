@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { generateNewsUrl } from "../../content/utils";
 import {
   defaultLanguage,
   supportedLanguageKey,
@@ -24,7 +25,7 @@ const translationDict: TranslationDict = {
     latest_news: "Latest News",
     services: "Services",
     history: "History",
-    assets_and_files: "Assets and Files",
+    assets_and_files: "Read First",
   },
   ja: {
     title: "索引",
@@ -34,17 +35,17 @@ const translationDict: TranslationDict = {
     latest_news: "最新ニュース",
     services: "サービス",
     history: "歴史",
-    assets_and_files: "アセットとファイル",
+    assets_and_files: "最初に読んでください",
   },
   zh: {
     title: "索引",
     welcome_text: "欢迎您",
     officiality_text: "德认诺莫国政府官方网站",
     featured_header: "特色",
-    latest_news: "最新消息",
+    latest_news: "最新新闻",
     services: "服务",
     history: "历史",
-    assets_and_files: "资产和文件",
+    assets_and_files: "先读",
   },
   id: {
     title: "Indeks",
@@ -54,7 +55,7 @@ const translationDict: TranslationDict = {
     latest_news: "Berita Terbaru",
     services: "Layanan",
     history: "Sejarah",
-    assets_and_files: "Aset dan Berkas",
+    assets_and_files: "Baca Dulu",
   },
   it: {
     title: "Indice",
@@ -64,7 +65,7 @@ const translationDict: TranslationDict = {
     latest_news: "Ultime notizie",
     services: "Servizi",
     history: "Storia",
-    assets_and_files: "Risorse e file",
+    assets_and_files: "Leggere Prima",
   },
 } as const;
 
@@ -75,6 +76,7 @@ const { lang } = Astro.params as Params;
 const useT = useTranslationDict(translationDict, lang);
 
 const articles = await getCollection("articles");
+const news = await getCollection("news");
 
 export function getStaticPaths() {
   return Object.keys(supportedLanguages).map((f) => {
@@ -95,33 +97,124 @@ export function getStaticPaths() {
     </header>
     <div>
       <h2>{useT("featured_header")}</h2>
-      {
-        articles
-          .filter((article) => article.slug.includes(lang || defaultLanguage))
-          .map((article) => {
-            return (
-              <div>
-                <h3>{article.data.title}</h3>
-                <a href={generateBlogUrl(article.slug, "articles", Astro.url)}>
-                  <p>{article.data.description}</p>
-                </a>
-              </div>
-            );
-          })
-      }
+      <ul class:list={["bulletList"]}>
+        {
+          articles
+            .filter((article) => article.slug.includes(lang || defaultLanguage))
+            .filter((article) => article.data.topics.includes("featured"))
+            .slice(0, 5)
+            .map((article) => {
+              return (
+                <li>
+                  <h3>
+                    <a
+                      href={generateBlogUrl(
+                        article.slug,
+                        "articles",
+                        Astro.url
+                      )}
+                    >
+                      {article.data.title}
+                    </a>
+                  </h3>
+                </li>
+              );
+            })
+        }
+      </ul>
     </div>
     <article>
       <div id="NewsDiv">
         <h2>{useT("latest_news")}</h2>
+        <ul class:list={["bulletList"]}>
+          {
+            news
+              .filter((article) =>
+                article.slug.includes(lang || defaultLanguage)
+              )
+              .slice(0, 5)
+              .sort((a, b) => (a.data.date as any) - (b.data.date as any))
+              .map((article) => {
+                return (
+                  <li>
+                    <h3>
+                      <a
+                        href={generateNewsUrl(
+                          article.slug,
+                          article.data.section,
+                          Astro.url
+                        )}
+                      >
+                        {article.data.title}
+                      </a>
+                    </h3>
+                  </li>
+                );
+              })
+          }
+        </ul>
       </div>
       <div id="ServciesDiv">
         <h2>{useT("services")}</h2>
       </div>
       <div id="HistoryDiv">
         <h2>{useT("history")}</h2>
+        <ul class:list={["bulletList"]}>
+          {
+            articles
+              .filter((article) =>
+                article.slug.includes(lang || defaultLanguage)
+              )
+              .filter((article) => article.data.topics.includes("history"))
+              .slice(0, 5)
+              .map((article) => {
+                return (
+                  <li>
+                    <h3>
+                      <a
+                        href={generateBlogUrl(
+                          article.slug,
+                          "articles",
+                          Astro.url
+                        )}
+                      >
+                        {article.data.title}
+                      </a>
+                    </h3>
+                  </li>
+                );
+              })
+          }
+        </ul>
       </div>
       <div id="AssetsDiv">
         <h2>{useT("assets_and_files")}</h2>
+        <ul class:list={["bulletList"]}>
+          {
+            articles
+              .filter((article) =>
+                article.slug.includes(lang || defaultLanguage)
+              )
+              .filter((article) => article.data.topics.includes("important"))
+              .map((article) => {
+                return (
+                  <li>
+                    <h3>
+                      <a
+                        href={generateBlogUrl(
+                          article.slug,
+                          "articles",
+                          Astro.url
+                        )}
+                      >
+                        {article.data.title}
+                      </a>
+                    </h3>
+                  </li>
+                );
+              })
+          }
+        </ul>
       </div>
     </article>
   </main>
@@ -162,5 +255,13 @@ export function getStaticPaths() {
     article {
       grid-template-columns: 1fr;
     }
+  }
+  .bulletList li {
+    text-align: left;
+  }
+  .bulletList a,
+  .bulletList a:visited {
+    color: var(--anchor-color);
+    text-decoration: none;
   }
 </style>

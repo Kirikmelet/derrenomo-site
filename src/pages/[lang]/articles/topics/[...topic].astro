@@ -41,31 +41,40 @@ const articles = (await getCollection("articles"))
   <main>
     <header>
       <h1>{topic}</h1>
-      <p>lang: {lang}</p>
-      <a href={new URL(`../`, Astro.url).href}>Go back</a>
+      <p>lang: {supportedLanguages[lang as supportedLanguageKey]}</p>
+      <a
+        href={new URL(`${import.meta.env.BASE_URL}${lang}/articles`, Astro.url)
+          .href}><p>Go back</p></a
+      >
     </header>
     <article>
       {
         articles.length > 0 ? (
-          <ul>
+          <>
             {articles.map((art) => {
               return (
-                <li>
-                  <div>
-                    <a href={generateBlogUrl(art.slug, "articles", Astro.url)}>
-                      {art.data.title}
-                    </a>
-                    <p>
+                <div class:list={["bg_secondary", "bg_round"]}>
+                  <h2>{art.data.title}</h2>
+                  <a
+                    href={generateBlogUrl(art.slug, "articles", Astro.url)}
+                    class:list={["anchor_static"]}
+                  >
+                    Read More.
+                  </a>
+                  <ul>
+                    <li>Author: {art.data.author}</li>
+                    <li>
+                      Date:
                       {art.data.date.toLocaleString(lang, {
                         dateStyle: "full",
                       })}
-                    </p>
-                    <p>{art.data.description}</p>
-                  </div>
-                </li>
+                    </li>
+                    <li>Description: {art.data.description}</li>
+                  </ul>
+                </div>
               );
             })}
-          </ul>
+          </>
         ) : (
           <p>No articles? (how)</p>
         )
