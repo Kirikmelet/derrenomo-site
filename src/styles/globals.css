@@ -131,6 +131,11 @@ a.anchor_static_bright:visited {
   color: var(--text-color-bright);
 }
 
+a.anchor_no_decoration,
+a.anchor_no_decoration:visited {
+  text-decoration: none;
+}
+
 .button_style {
     color: var(--text-color-bright);
     text-decoration: none;

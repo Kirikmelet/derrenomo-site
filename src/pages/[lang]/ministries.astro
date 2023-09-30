@@ -1,0 +1,217 @@
+---
+import type { TomlPrimitive } from "smol-toml/dist/util";
+import ContentStyles from "../../components/ContentStyles.astro";
+import TableOfContents from "../../components/TableOfContents.astro";
+import { supportedLanguageKey, supportedLanguages } from "../../i18n/translations";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { parseTranslationFile, readTranslationFile, useTranslationDict } from "../../utils/toml_translation_reader";
+import translationFile from "./ministries_astro_trans-toml.txt"
+import type { InferGetStaticParamsType } from "astro";
+
+const transFile: String = await readTranslationFile(new URL(translationFile,
+Astro.url));
+
+export function getStaticPaths() {
+  return Object.keys(supportedLanguages).map((f) => {
+    return {
+      params: {
+        lang: f as supportedLanguageKey,
+      },
+    };
+  });
+}
+type Params = InferGetStaticParamsType<typeof getStaticPaths>;
+
+const { lang } = Astro.params as Params;
+const transDict = useTranslationDict(parseTranslationFile(transFile), lang)
+
+---
+<BaseLayout title="Ministries">
+  <ContentStyles />
+  <main>
+    <header>
+      <h1>{transDict("title")}</h1>
+      <p>
+        {transDict("description")}
+      </p>
+      <TableOfContents>
+        <li>
+          <a href="#MCPPW">{transDict("mcppw-title")}</a>
+          <ol>
+            <li>
+              <a href="#MCCPW_MDOE">{transDict("mcppw_mdoe-title")}</a>
+            </li>
+            <li>
+              <a href="#MCCPW_MDOA">{transDict("mcppw_mdoa-title")}</a>
+            </li>
+            <li>
+              <a href="#MCCPW_MDOT"
+                >{transDict("mcppw_mdot-title")}</a
+              >
+            </li>
+            <li>
+              <a href="#MCCPW_MDOI">{transDict("mcppw_mdoi-title")}</a>
+            </li>
+          </ol>
+        </li>
+        <li><a href="#MOY">{transDict("moy-title")}</a></li>
+        <li><a href="#MOD">{transDict("mod-title")}</a></li>
+        <li><a href="#MOE">{transDict("moe-title")}</a></li>
+        <li><a href="#MFA">{transDict("mfa-title")}</a></li>
+        <li><a href="#MOL">{transDict("mol-title")}</a></li>
+        <li><a href="#MTI">{transDict("mti-title")}</a></li>
+        <li><a href="#MIA">{transDict("mia-title")}</a></li>
+        <li><a href="#MOJ">{transDict("moj-title")}</a></li>
+        <li>
+          <a href="#MRSA">{transDict("mrsa-title")}</a>
+          <ol>
+            <li><a href="#MRSA_DOC">{transDict("mrsa_doc-title")}</a></li>
+          </ol>
+        </li>
+        <li><a href="#MOH">{transDict("moh-title")}</a></li>
+      </TableOfContents>
+    </header>
+    <article>
+      <div id="MCPPW">
+        <h2>{transDict("mcppw-title")}</h2>
+        <p>
+          {transDict("mcppw")}
+        </p>
+        <details>
+          <summary>{transDict("services")}</summary>
+          <p>WIP</p>
+        </details>
+        <div id="MCCPW_MDOE">
+          <h3>{transDict("mcppw_mdoe-title")}</h3>
+          <p>
+            {transDict("mcppw_mdoe")}
+          </p>
+        </div>
+        <div id="MCCPW_MDOA">
+          <h3>{transDict("mcppw_mdoa-title")}</h3>
+          <p>
+            {transDict("mcppw_mdoa")}
+          </p>
+        </div>
+        <div id="MCCPW_MDOT">
+          <h3>{transDict("mcppw_mdot-title")}</h3>
+          <p>
+            {transDict("mcppw_mdot")}
+          </p>
+        </div>
+        <div id="MCCPW_MDOI">
+          <h3>{transDict("mcppw_mdoi-title")}</h3>
+          <p>
+            {transDict("mcppw_mdoi")}
+          </p>
+        </div>
+      </div>
+      <div id="MOY">
+        <h2>{transDict("moy-title")}</h2>
+        <p>
+          {transDict("moy")}
+        </p>
+        <details>
+          <summary>{transDict("services")}</summary>
+          <p>WIP</p>
+        </details>
+      </div>
+      <div id="MOD">
+        <h2>{transDict("mod-title")}</h2>
+        <p>
+          {transDict("mod")}
+        </p>
+        <details>
+          <summary>{transDict("services")}</summary>
+          <p>WIP</p>
+        </details>
+      </div>
+      <div id="MOE">
+        <h2>{transDict("moe-title")}</h2>
+        <p>
+          {transDict("moe")}
+        </p>
+        <details>
+          <summary>{transDict("services")}</summary>
+          <p>WIP</p>
+        </details>
+      </div>
+      <div id="MFA">
+        <h2>{transDict("mfa-title")}</h2>
+        <p>
+          {transDict("mfa")}
+        </p>
+        <details>
+          <summary>{transDict("services")}</summary>
+          <p>WIP</p>
+        </details>
+      </div>
+      <div id="MOL">
+        <h2>{transDict("mol-title")}</h2>
+        <p>
+          {transDict("mol")}
+        </p>
+        <details>
+          <summary>{transDict("services")}</summary>
+          <p>WIP</p>
+        </details>
+      </div>
+      <div id="MTI">
+        <h2>{transDict("mti-title")}</h2>
+        <p>
+          {transDict("mti")}
+        </p>
+        <details>
+          <summary>{transDict("services")}</summary>
+          <p>WIP</p>
+        </details>
+      </div>
+      <div id="MIA">
+        <h2>{transDict("mia-title")}</h2>
+        <p>
+          {transDict("mia")}
+        </p>
+        <details>
+          <summary>{transDict("services")}</summary>
+          <p>WIP</p>
+        </details>
+      </div>
+      <div id="MOJ">
+        <h2>{transDict("moj-title")}</h2>
+        <p>
+          {transDict("moj")}
+        </p>
+        <details>
+          <summary>{transDict("services")}</summary>
+          <p>WIP</p>
+        </details>
+      </div>
+      <div id="MRSA">
+        <h2>{transDict("mrsa-title")}</h2>
+        <p>
+          {transDict("mrsa")}
+        </p>
+        <details>
+          <summary>{transDict("services")}</summary>
+          <p>WIP</p>
+        </details>
+        <div id="MRSA_DOC">
+        <h3>{transDict("mrsa_doc-title")}</h3>
+        <p>
+          {transDict("mrsa_doc")}
+        </p>
+        </div>
+      </div>
+      <div id="MOH">
+        <h2>{transDict("moh-title")}</h2>
+        <p>
+          {transDict("moh")}
+        </p>
+        <details>
+          <summary>{transDict("services")}</summary>
+          <p>WIP</p>
+        </details>
+      </div>
+    </article>
+  </main>
+</BaseLayout>

@@ -13,7 +13,7 @@ const translationDict: TranslationDict = {
     Object.keys(supportedLanguages).map((key) => (
       <li>
         <a
-                  class:list={["anchor_static_bright", "padding_small"]}
+                  class:list={["anchor_static_bright", "padding_small", "anchor_no_decoration"]}
           href={changeLangRedirect(Astro.url, key as supportedLanguageKey).href}
         >
           {supportedLanguages[key as supportedLanguageKey]}

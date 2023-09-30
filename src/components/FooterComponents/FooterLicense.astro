@@ -35,7 +35,7 @@ const useT = useTranslationDict(translationDict, lang);
 
 <p>
   {useT("text")} -
-  <a href={license.link}>{license.name}</a>
+  <a class:list={["anchor_static_bright"]} href={license.link}>{license.name}</a>
   <a href={license.link}
     ><Image src={licenseSeal} alt="CC Seal" height={24} /></a
   >
@@ -48,9 +48,5 @@ const useT = useTranslationDict(translationDict, lang);
   }
   img {
     vertical-align: bottom;
-  }
-  a,
-  a:visited {
-    color: var(--text-color-bright);
   }
 </style>
